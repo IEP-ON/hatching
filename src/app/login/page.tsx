@@ -2,18 +2,20 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Suspense } from "react";
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
 
   async function handleLogin(e: React.FormEvent) {
@@ -25,7 +27,8 @@ export default function LoginPage() {
     if (error) {
       setError("이메일 또는 비밀번호를 확인해주세요.");
     } else {
-      router.push("/dashboard");
+      const redirectTo = searchParams.get("redirectTo") ?? "/dashboard";
+      router.push(redirectTo);
       router.refresh();
     }
     setLoading(false);
@@ -72,5 +75,13 @@ export default function LoginPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }
