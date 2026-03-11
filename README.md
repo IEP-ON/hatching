@@ -88,6 +88,7 @@ vercel --prod
 |------|------|------|
 | `/dashboard` | 대시보드 | 교사 |
 | `/guide` | 지도서 (활동 목록) | 교사 |
+| `/guide/activities` | 전체 활동 목록 | 교사 |
 | `/guide/activities/new` | 새 활동 만들기 | 교사 |
 | `/guide/activities/[id]` | 활동 상세 + 배포 + 피드백 | 교사 |
 | `/guide/students` | 학생 관리 | 교사 |
