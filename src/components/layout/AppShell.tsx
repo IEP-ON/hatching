@@ -16,6 +16,7 @@ import {
   Bird,
   TrendingUp,
   Eye,
+  Radio,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -70,6 +71,12 @@ const NAV_ITEMS: NavItem[] = [
     href: "/guide/observations",
     label: "관찰",
     icon: <Eye size={20} />,
+    roles: ["teacher"],
+  },
+  {
+    href: "/guide/iot",
+    label: "IoT",
+    icon: <Radio size={20} />,
     roles: ["teacher"],
   },
   {
