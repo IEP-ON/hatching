@@ -37,7 +37,6 @@ export default function GrowthPage() {
   const [quails, setQuails] = useState<Quail[]>([]);
   const [readings, setReadings] = useState<IotReading[]>([]);
   const [selectedType, setSelectedType] = useState<ReadingType>("weight");
-  const [selectedQuailId, setSelectedQuailId] = useState<string>("all");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [manualForm, setManualForm] = useState({
@@ -87,7 +86,6 @@ export default function GrowthPage() {
         unit: READING_CONFIG[manualForm.reading_type].unit,
         source: "manual",
         recorded_at: new Date(manualForm.recorded_at).toISOString(),
-        ...(manualForm.quail_id ? {} : {}),
       }).select("*").single();
       if (error) throw error;
       setReadings((prev) => [...prev, data as IotReading].sort(
