@@ -15,6 +15,7 @@ import {
   Calendar,
   Bird,
   TrendingUp,
+  Eye,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -63,6 +64,12 @@ const NAV_ITEMS: NavItem[] = [
     href: "/guide/growth",
     label: "성장",
     icon: <TrendingUp size={20} />,
+    roles: ["teacher"],
+  },
+  {
+    href: "/guide/observations",
+    label: "관찰",
+    icon: <Eye size={20} />,
     roles: ["teacher"],
   },
   {

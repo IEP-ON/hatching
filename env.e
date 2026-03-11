@@ -1,0 +1,9 @@
+# Hatching Webapp — 환경변수 예시 (복사 후 .env.local로 이름 변경)
+
+# hatching-webapp Supabase 프로젝트
+NEXT_PUBLIC_SUPABASE_URL=https://byshefxoakvdmpwmkqjd.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5c2hlZnhvYWt2ZG1wd21rcWpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMDYzMzQsImV4cCI6MjA4ODc4MjMzNH0.l0JpydNnpszah8aP0MGnKYFCUhkWVqY_KRND9Z_sh08
+
+# IEPON_DATABASE (서버 사이드 전용 — 클라이언트 노출 금지)
+IEPON_SUPABASE_URL=https://phttiextffbxbbnobrou.supabase.co
+IEPON_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodHRpZXh0ZmZieGJibm9icm91Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg3NDkyNDUsImV4cCI6MjA3NDMyNTI0NX0.N5zUK7Je11yDDg6yzsyw104BoKyyZMUG20TbEVvA8UE
