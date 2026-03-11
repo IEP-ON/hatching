@@ -126,22 +126,27 @@ export default function AppShell({ children, profile }: AppShellProps) {
           <span className="hidden sm:inline">사계절 메추리</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1 ml-4">
-          {filteredNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
-                pathname.startsWith(item.href)
-                  ? "bg-pink-100 text-pink-700"
-                  : "text-gray-600 hover:bg-gray-100"
-              )}
-            >
-              {item.icon}
-              {item.label}
-            </Link>
-          ))}
+        <nav className="hidden md:flex items-center gap-0.5 ml-4 overflow-x-auto scrollbar-hide flex-1 min-w-0">
+          {filteredNav.map((item) => {
+            const isActive = item.href === "/guide"
+              ? pathname === "/guide" || pathname.startsWith("/guide/")
+              : pathname === item.href || pathname.startsWith(item.href + "/");
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors whitespace-nowrap shrink-0",
+                  isActive
+                    ? "bg-pink-100 text-pink-700"
+                    : "text-gray-600 hover:bg-gray-100"
+                )}
+              >
+                {item.icon}
+                <span className="hidden lg:inline">{item.label}</span>
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
@@ -161,23 +166,30 @@ export default function AppShell({ children, profile }: AppShellProps) {
 
       {/* 모바일 메뉴 */}
       {mobileOpen && (
-        <div className="md:hidden border-b bg-white px-4 py-3 space-y-1">
-          {filteredNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium",
-                pathname.startsWith(item.href)
-                  ? "bg-pink-100 text-pink-700"
-                  : "text-gray-700 hover:bg-gray-100"
-              )}
-            >
-              {item.icon}
-              {item.label}
-            </Link>
-          ))}
+        <div className="md:hidden border-b bg-white px-4 py-3">
+          <div className="grid grid-cols-3 gap-1.5">
+            {filteredNav.map((item) => {
+              const isActive = item.href === "/guide"
+                ? pathname === "/guide" || pathname.startsWith("/guide/")
+                : pathname === item.href || pathname.startsWith(item.href + "/");
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={cn(
+                    "flex flex-col items-center gap-1 px-2 py-3 rounded-lg text-xs font-medium transition-colors",
+                    isActive
+                      ? "bg-pink-100 text-pink-700"
+                      : "text-gray-600 hover:bg-gray-50"
+                  )}
+                >
+                  {item.icon}
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
         </div>
       )}
 
