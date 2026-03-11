@@ -69,43 +69,22 @@ export default function StudentsPage() {
     }
     setSaving(true);
     try {
-      // 1. Supabase Auth에 학생 계정 생성 (관리자 inviteUserByEmail 또는 signUp)
-      const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
-        email: newEmail,
-        password: `hatching_${Date.now()}`, // 임시 비밀번호 — 이메일로 재설정 유도
-        options: { data: { name: newName, role: "student" } },
+      const res = await fetch("/api/students/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newName,
+          email: newEmail,
+          level_code: newLevel,
+          project_id: projectId,
+        }),
       });
-      if (signUpErr) throw signUpErr;
-      const studentUserId = signUpData.user?.id;
-      if (!studentUserId) throw new Error("학생 계정 생성 실패");
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "오류가 발생했습니다.");
 
-      // 2. 프로필 생성
-      const { error: profileErr } = await supabase.from("profiles").upsert({
-        id: studentUserId,
-        role: "student",
-        name: newName,
-        level_code: newLevel,
-      });
-      if (profileErr) throw profileErr;
-
-      // 3. 프로젝트 매핑
-      const { error: mapErr } = await supabase.from("project_students").insert({
-        project_id: projectId,
-        student_id: studentUserId,
-        level_code: newLevel,
-      });
-      if (mapErr) throw mapErr;
-
-      toast.success(`${newName} 학생이 등록되었습니다.`);
+      toast.success(`${newName} 학생이 등록되었습니다. (임시 비밀번호: ${json.tempPassword})`);
       setNewName(""); setNewEmail(""); setNewLevel("L1");
-
-      // 목록 새로고침
-      const { data: ps } = await supabase
-        .from("project_students")
-        .select("*, profile:profiles(*)")
-        .eq("project_id", projectId)
-        .order("joined_at");
-      setStudents((ps as (ProjectStudent & { profile: Profile })[]) ?? []);
+      setStudents((prev) => [...prev, json.student as ProjectStudent & { profile: Profile }]);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "오류가 발생했습니다.");
     } finally {
