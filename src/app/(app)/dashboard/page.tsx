@@ -58,7 +58,8 @@ export default async function DashboardPage() {
         </div>
         {currentSeason && (
           <div className={`px-3 py-1.5 rounded-full text-sm font-medium ${SEASON_CONFIG[currentSeason].bgColor} ${SEASON_CONFIG[currentSeason].color}`}>
-            {SEASON_CONFIG[currentSeason].label} 🌸
+            {SEASON_CONFIG[currentSeason].label}{" "}
+            {currentSeason === "spring" ? "🌸" : currentSeason === "summer" ? "☀️" : currentSeason === "autumn" ? "🍂" : "❄️"}
           </div>
         )}
       </div>
