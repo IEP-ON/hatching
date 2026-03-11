@@ -14,6 +14,7 @@ import {
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import DistributePanel from "./DistributePanel";
+import ResponseReview from "./ResponseReview";
 
 export default async function ActivityDetailPage({
   params,
@@ -50,11 +51,12 @@ export default async function ActivityDetailPage({
     .eq("activity_id", id)
     .order("distributed_at", { ascending: false });
 
-  // 학생 응답 현황
+  // 학생 응답 현황 (level_code 포함)
   const { data: responses } = await supabase
     .from("student_responses")
-    .select("*, project_student:project_students(profile:profiles(name))")
-    .eq("activity_id", id);
+    .select("*, project_student:project_students(level_code, profile:profiles(name))")
+    .eq("activity_id", id)
+    .order("submitted_at", { ascending: false });
 
   const a = activity as Activity;
 
@@ -151,40 +153,12 @@ export default async function ActivityDetailPage({
         teacherId={user.id}
       />
 
-      {/* 학생 응답 현황 */}
+      {/* 학생 응답 검토 (클라이언트 컴포넌트) */}
       {responses && responses.length > 0 && (
-        <div>
-          <h2 className="font-semibold mb-3 text-gray-700">
-            학생 응답 현황 ({responses.filter((r) => r.status === "submitted").length}/{responses.length})
-          </h2>
-          <div className="space-y-2">
-            {responses.map((r) => (
-              <Card key={r.id}>
-                <CardContent className="p-3 flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">
-                      {(r.project_student as { profile: { name: string } })?.profile?.name ?? "학생"}
-                    </p>
-                    {r.response_data?.text && (
-                      <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{r.response_data.text}</p>
-                    )}
-                  </div>
-                  <Badge
-                    className={
-                      r.status === "reviewed"
-                        ? "bg-blue-100 text-blue-700 border-blue-200"
-                        : r.status === "submitted"
-                        ? "bg-green-100 text-green-700 border-green-200"
-                        : "bg-gray-100 text-gray-400 border-gray-200"
-                    }
-                  >
-                    {r.status === "reviewed" ? "검토됨" : r.status === "submitted" ? "제출됨" : "미제출"}
-                  </Badge>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
+        <ResponseReview
+          responses={responses as Parameters<typeof ResponseReview>[0]["responses"]}
+          activity={a}
+        />
       )}
     </div>
   );
