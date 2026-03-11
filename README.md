@@ -76,6 +76,7 @@ vercel --prod
 |--------|------|
 | `NEXT_PUBLIC_SUPABASE_URL` | hatching-webapp Supabase URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | hatching-webapp anon key |
+| `SUPABASE_SERVICE_ROLE_KEY` | hatching-webapp service_role key (서버 전용 — 학생 계정 생성) |
 | `IEPON_SUPABASE_URL` | IEPON_DATABASE URL |
 | `IEPON_SUPABASE_ANON_KEY` | IEPON_DATABASE anon key (서버 전용) |
 
