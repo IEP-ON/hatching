@@ -128,9 +128,10 @@ export default function AppShell({ children, profile }: AppShellProps) {
 
         <nav className="hidden md:flex items-center gap-0.5 ml-4 overflow-x-auto scrollbar-hide flex-1 min-w-0">
           {filteredNav.map((item) => {
-            const isActive = item.href === "/guide"
-              ? pathname === "/guide" || pathname.startsWith("/guide/")
-              : pathname === item.href || pathname.startsWith(item.href + "/");
+            const hasMoreSpecific = item.href === "/guide" && filteredNav.some(
+              (other) => other.href !== "/guide" && other.href.startsWith("/guide/") && pathname.startsWith(other.href)
+            );
+            const isActive = !hasMoreSpecific && (pathname === item.href || pathname.startsWith(item.href + "/"));
             return (
               <Link
                 key={item.href}
@@ -169,9 +170,10 @@ export default function AppShell({ children, profile }: AppShellProps) {
         <div className="md:hidden border-b bg-white px-4 py-3">
           <div className="grid grid-cols-3 gap-1.5">
             {filteredNav.map((item) => {
-              const isActive = item.href === "/guide"
-                ? pathname === "/guide" || pathname.startsWith("/guide/")
-                : pathname === item.href || pathname.startsWith(item.href + "/");
+              const hasMoreSpecific = item.href === "/guide" && filteredNav.some(
+                (other) => other.href !== "/guide" && other.href.startsWith("/guide/") && pathname.startsWith(other.href)
+              );
+              const isActive = !hasMoreSpecific && (pathname === item.href || pathname.startsWith(item.href + "/"));
               return (
                 <Link
                   key={item.href}
