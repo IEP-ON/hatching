@@ -96,7 +96,8 @@ export default async function DashboardPage() {
               {(projectStudents as (ProjectStudent & { profile: Profile })[])?.map((ps) => {
                 const levelConf = ps.level_code ? LEVEL_CONFIG[ps.level_code] : null;
                 return (
-                  <Card key={ps.id} className="hover:shadow-md transition-shadow">
+                  <Link key={ps.id} href={`/guide/portfolio/${ps.id}`}>
+                  <Card className="hover:shadow-md transition-shadow cursor-pointer">
                     <CardContent className="p-4 flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-lg font-bold text-pink-600">
                         {ps.profile?.name?.[0] ?? "?"}
@@ -111,6 +112,7 @@ export default async function DashboardPage() {
                       </div>
                     </CardContent>
                   </Card>
+                  </Link>
                 );
               })}
             </div>
@@ -125,7 +127,8 @@ export default async function DashboardPage() {
             {recentActivities && recentActivities.length > 0 ? (
               <div className="space-y-2">
                 {recentActivities.map((activity) => (
-                  <Card key={activity.id} className="hover:shadow-sm transition-shadow">
+                  <Link key={activity.id} href={`/guide/activities/${activity.id}`}>
+                  <Card className="hover:shadow-sm transition-shadow cursor-pointer">
                     <CardContent className="p-4 flex items-center justify-between">
                       <div>
                         <p className="font-medium text-sm">{activity.title}</p>
@@ -139,6 +142,7 @@ export default async function DashboardPage() {
                       )}
                     </CardContent>
                   </Card>
+                  </Link>
                 ))}
               </div>
             ) : (
