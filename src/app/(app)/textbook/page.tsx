@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 import { LEVEL_CONFIG, SEASON_CONFIG, SUBJECT_LABELS, type Activity, type ProjectStudent, type Profile } from "@/lib/types";
 
 export default async function TextbookPage() {
@@ -157,7 +158,8 @@ function ActivityCard({
   const variant = levelCode ? activity.level_variants?.[levelCode as keyof typeof activity.level_variants] : null;
 
   return (
-    <Card className={`${isToday ? "border-pink-200 shadow-sm" : ""}`}>
+    <Link href={`/textbook/${activity.id}`}>
+    <Card className={`${isToday ? "border-pink-200 shadow-sm" : ""} hover:shadow-md transition-shadow cursor-pointer`}>
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1">
@@ -185,5 +187,6 @@ function ActivityCard({
         </div>
       </CardContent>
     </Card>
+    </Link>
   );
 }
