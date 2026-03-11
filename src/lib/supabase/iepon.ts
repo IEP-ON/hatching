@@ -5,8 +5,8 @@ import { createClient } from "@supabase/supabase-js";
  * 클라이언트에서 직접 호출 금지 (키 노출 방지)
  */
 export function createIeponClient() {
-  const url = process.env.IEPON_DB_URL;
-  const key = process.env.IEPON_DB_ANON_KEY;
+  const url = process.env.IEPON_SUPABASE_URL;
+  const key = process.env.IEPON_SUPABASE_ANON_KEY;
 
   if (!url || !key) {
     throw new Error("IEPON_DATABASE 환경변수가 설정되지 않았습니다.");
