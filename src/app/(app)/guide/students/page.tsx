@@ -8,7 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { UserPlus, Trash2 } from "lucide-react";
+import { UserPlus, Trash2, BookOpen } from "lucide-react";
+import Link from "next/link";
 import { LEVEL_CONFIG, type LevelCode, type ProjectStudent, type Profile } from "@/lib/types";
 
 const LEVEL_CODES = Object.keys(LEVEL_CONFIG) as LevelCode[];
@@ -194,6 +195,13 @@ export default function StudentsPage() {
                       {ps.level_code}
                     </Badge>
                   )}
+                  <Link
+                    href={`/guide/portfolio/${ps.id}`}
+                    className="text-gray-300 hover:text-blue-400 transition-colors"
+                    title="포트폴리오 보기"
+                  >
+                    <BookOpen size={16} />
+                  </Link>
                   <button
                     onClick={() => removeStudent(ps.id, ps.profile?.name ?? "학생")}
                     className="text-gray-300 hover:text-red-400 transition-colors"
