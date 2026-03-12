@@ -16,7 +16,13 @@ export default async function DashboardPage() {
 
   const { data: profile, error: profileError } = await supabase.from("profiles").select("*").eq("id", user.id).single();
   if (!profile) {
-    console.error("[대시보드] 프로필 없음:", { userId: user.id, error: profileError });
+    console.error("[대시보드] 프로필 없음:", { 
+      userId: user.id, 
+      error: profileError,
+      errorMessage: profileError?.message,
+      errorCode: profileError?.code,
+      errorDetails: profileError?.details
+    });
     redirect("/login?error=no_profile");
   }
   
