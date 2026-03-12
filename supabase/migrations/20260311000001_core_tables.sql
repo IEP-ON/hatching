@@ -66,15 +66,6 @@ CREATE POLICY "교사는 본인 프로젝트 전체 관리"
   USING (teacher_id = auth.uid())
   WITH CHECK (teacher_id = auth.uid());
 
-CREATE POLICY "학생은 소속 프로젝트 읽기"
-  ON public.projects FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.project_students ps
-      WHERE ps.project_id = id AND ps.student_id = auth.uid()
-    )
-  );
-
 CREATE TRIGGER projects_updated_at
   BEFORE UPDATE ON public.projects
   FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
@@ -109,6 +100,16 @@ CREATE POLICY "교사는 본인 프로젝트 학생 관리"
 CREATE POLICY "학생은 본인 매핑 읽기"
   ON public.project_students FOR SELECT
   USING (student_id = auth.uid());
+
+-- projects 테이블에 학생 정책 추가 (project_students 테이블 생성 후)
+CREATE POLICY "학생은 소속 프로젝트 읽기"
+  ON public.projects FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.project_students ps
+      WHERE ps.project_id = id AND ps.student_id = auth.uid()
+    )
+  );
 
 -- 시간표
 CREATE TABLE public.lesson_schedules (
