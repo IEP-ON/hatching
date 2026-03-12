@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메추리 사계절 프로젝트 — 교육과정 문서</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 2rem;
+        }
+        
+        .intro {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #667eea;
+        }
+        
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .doc-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .doc-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+        
+        .doc-card.featured {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+        }
+        
+        .doc-card.featured::before {
+            content: "⭐ NEW";
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: #667eea;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        
+        .doc-card h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .doc-card .meta {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .doc-card ul {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+        
+        .doc-card ul li {
+            padding: 0.3rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .doc-card ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+        }
+        
+        .doc-card a {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .doc-card a:hover {
+            background: #764ba2;
+        }
+        
+        .guide-section {
+            background: #fff9e6;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .guide-section h2 {
+            color: #f57c00;
+            margin-bottom: 1rem;
+        }
+        
+        .guide-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .guide-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ffe0b2;
+        }
+        
+        .guide-item h4 {
+            color: #f57c00;
+            margin-bottom: 0.5rem;
+        }
+        
+        .guide-item ol {
+            margin-left: 1.2rem;
+        }
+        
+        .concepts {
+            background: #e8f5e9;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .concepts h2 {
+            color: #2e7d32;
+            margin-bottom: 1rem;
+        }
+        
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .concept-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        .concept-item h4 {
+            color: #2e7d32;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .concept-item p {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        footer {
+            background: #f8f9fa;
+            padding: 2rem;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .docs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐣 메추리 사계절 프로젝트</h1>
+            <p>봄의 알, 여름의 날개, 가을의 노래, 겨울의 온기</p>
+        </header>
+        
+        <div class="content">
+            <div class="intro">
+                <h2>📚 교육과정 문서 아카이브</h2>
+                <p>특수교육 개별화 교육과정 기반, IB 탐구 단원 설계, 생명의 한살이를 통한 교과 통합 프로젝트</p>
+            </div>
+            
+            <div class="docs-grid">
+                <div class="doc-card featured">
+                    <h3>봄·여름 1학기 커리큘럼</h3>
+                    <div class="meta">780줄 | 3월~7월 일별 상세</div>
+                    <ul>
+                        <li>에피소드 기반 탐구 (오리탕→에디슨→스티로폼)</li>
+                        <li>3월 완전 작성 (매일 교시별·학생별)</li>
+                        <li>IB 핵심질문 + 수준별 과제</li>
+                        <li>교과 성취기준 매핑</li>
+                    </ul>
+                    <a href="curriculum/spring-summer-semester-36b0a5.md" target="_blank">문서 보기</a>
+                </div>
+                
+                <div class="doc-card">
+                    <h3>마스터 통합본</h3>
+                    <div class="meta">37KB | 전체 개요</div>
+                    <ul>
+                        <li>프로젝트 철학 + 기술 스택</li>
+                        <li>DB 스키마 + 화면 설계</li>
+                        <li>개발 로드맵</li>
+                        <li>신규 개발자 온보딩</li>
+                    </ul>
+                    <a href="curriculum/hatching-complete-integration-9dc005.md" target="_blank">문서 보기</a>
+                </div>
+                
+                <div class="doc-card">
+                    <h3>연간 커리큘럼 상세</h3>
+                    <div class="meta">26KB | 사계절 주차별</div>
+                    <ul>
+                        <li>3월~2월 사계절 구조</li>
+                        <li>주차별 활동 계획</li>
+                        <li>성취기준 매핑</li>
+                        <li>프로젝트 마일스톤</li>
+                    </ul>
+                    <a href="curriculum/yearly-curriculum-detailed-9dc005.md" target="_blank">문서 보기</a>
+                </div>
+                
+                <div class="doc-card">
+                    <h3>일일 수업 계획</h3>
+                    <div class="meta">14KB | 요일별 시나리오</div>
+                    <ul>
+                        <li>월/수/금 수업 구조</li>
+                        <li>수다모여날 운영</li>
+                        <li>개별 수업 가이드</li>
+                        <li>교시별 활동</li>
+                    </ul>
+                    <a href="curriculum/yearly-daily-curriculum-9dc005.md" target="_blank">문서 보기</a>
+                </div>
+                
+                <div class="doc-card">
+                    <h3>교육철학 보완</h3>
+                    <div class="meta">9KB | 근거 자료</div>
+                    <ul>
+                        <li>생명의 한살이 철학</li>
+                        <li>3대 트랙 설계</li>
+                        <li>수준별 기대치</li>
+                        <li>마음편지 관찰일기</li>
+                    </ul>
+                    <a href="curriculum/learning-activities-philosophy-9dc005.md" target="_blank">문서 보기</a>
+                </div>
+            </div>
+            
+            <div class="guide-section">
+                <h2>🔍 문서 활용 가이드</h2>
+                <div class="guide-grid">
+                    <div class="guide-item">
+                        <h4>개발 시작 전</h4>
+                        <ol>
+                            <li>마스터 통합본 읽기</li>
+                            <li>DB 스키마 확인</li>
+                            <li>화면 설계 파악</li>
+                        </ol>
+                    </div>
+                    <div class="guide-item">
+                        <h4>기능 개발 중</h4>
+                        <ol>
+                            <li>연간 커리큘럼 확인</li>
+                            <li>일일 수업 시나리오 참고</li>
+                            <li>수준별 변형 구현</li>
+                        </ol>
+                    </div>
+                    <div class="guide-item">
+                        <h4>수업 준비</h4>
+                        <ol>
+                            <li>봄·여름 커리큘럼 확인</li>
+                            <li>해당 주차 활동 검토</li>
+                            <li>학생별 과제 준비</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concepts">
+                <h2>📌 주요 개념</h2>
+                <div class="concept-grid">
+                    <div class="concept-item">
+                        <h4>수준 코드</h4>
+                        <p>L0 (AAC·그림) → L1 (1학년) → L1-2 → L2 (2학년) → L3-4 (3~4학년)</p>
+                    </div>
+                    <div class="concept-item">
+                        <h4>사계절 내러티브</h4>
+                        <p>봄(시작) → 여름(성장) → 가을(분석) → 겨울(작별)</p>
+                    </div>
+                    <div class="concept-item">
+                        <h4>학습 활동 3대 트랙</h4>
+                        <p>수다모여날 · 개별 수업 · 마음편지 관찰일기</p>
+                    </div>
+                    <div class="concept-item">
+                        <h4>IB 탐구 단원</h4>
+                        <p>핵심질문 → 탐구 활동 → 수준별 과제 → 공유·반성</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p><strong>프로젝트 코드</strong>: 수다모여날 | <strong>학년도</strong>: 2026.03 ~ 2027.02</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+                <a href="curriculum/README.md" style="color: #667eea; text-decoration: none;">📖 전체 문서 목록 보기</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
