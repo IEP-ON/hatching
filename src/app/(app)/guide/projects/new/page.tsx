@@ -20,21 +20,47 @@ export default function NewProjectPage() {
     description: "",
     species: "메추리",
     school_year: "2026",
+    class_code: "",
   });
+  const [teacherPin, setTeacherPin] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!form.class_code.trim()) {
+      toast.error("학급 코드를 입력해주세요.");
+      return;
+    }
+    if (teacherPin && !/^\d{4,6}$/.test(teacherPin)) {
+      toast.error("PIN은 4~6자리 숫자입니다.");
+      return;
+    }
     setLoading(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("로그인이 필요합니다.");
 
       const { error } = await supabase.from("projects").insert({
-        ...form,
+        name: form.name,
+        description: form.description,
+        species: form.species,
+        school_year: form.school_year,
+        class_code: form.class_code.trim(),
         teacher_id: user.id,
         is_active: true,
       });
       if (error) throw error;
+
+      // 교사 프로필에 class_code 저장
+      await supabase.from("profiles").update({ class_code: form.class_code.trim() }).eq("id", user.id);
+
+      // PIN이 입력된 경우 교사 계정 이메일을 class.local 형식으로 변경
+      if (teacherPin) {
+        await fetch("/api/auth/setup-teacher-pin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pin: teacherPin }),
+        });
+      }
 
       toast.success("프로젝트가 만들어졌습니다!");
       router.push("/dashboard");
@@ -75,6 +101,29 @@ export default function NewProjectPage() {
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 placeholder="한 줄 설명"
               />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="class_code">학급 코드 <span className="text-pink-500">*</span></Label>
+              <Input
+                id="class_code"
+                value={form.class_code}
+                onChange={(e) => setForm({ ...form, class_code: e.target.value })}
+                placeholder="예: 사계절2026"
+                required
+              />
+              <p className="text-xs text-gray-400">학생들이 로그인 시 입력하는 코드입니다.</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="teacher_pin">선생님 PIN (4~6자리 숫자)</Label>
+              <Input
+                id="teacher_pin"
+                type="number"
+                value={teacherPin}
+                onChange={(e) => setTeacherPin(e.target.value)}
+                placeholder="1234"
+                maxLength={6}
+              />
+              <p className="text-xs text-gray-400">선생님이 로그인할 때 사용합니다. 지금 설정하거나 나중에 변경 가능.</p>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">

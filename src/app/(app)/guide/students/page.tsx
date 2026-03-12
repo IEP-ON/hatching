@@ -32,7 +32,7 @@ export default function StudentsPage() {
   const [saving, setSaving] = useState(false);
   const [newName, setNewName] = useState("");
   const [newLevel, setNewLevel] = useState<LevelCode>("L1");
-  const [newEmail, setNewEmail] = useState("");
+  const [newPin, setNewPin] = useState("");
 
   useEffect(() => {
     async function load() {
@@ -63,8 +63,12 @@ export default function StudentsPage() {
   }, [supabase]);
 
   async function addStudent() {
-    if (!projectId || !newName.trim() || !newEmail.trim()) {
-      toast.error("이름, 이메일을 모두 입력해주세요.");
+    if (!projectId || !newName.trim() || !newPin.trim()) {
+      toast.error("이름과 PIN을 입력해주세요.");
+      return;
+    }
+    if (!/^\d{4,6}$/.test(newPin)) {
+      toast.error("PIN은 4~6자리 숫자입니다.");
       return;
     }
     setSaving(true);
@@ -74,7 +78,7 @@ export default function StudentsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: newName,
-          email: newEmail,
+          pin: newPin,
           level_code: newLevel,
           project_id: projectId,
         }),
@@ -82,8 +86,8 @@ export default function StudentsPage() {
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? "오류가 발생했습니다.");
 
-      toast.success(`${newName} 학생이 등록되었습니다. (임시 비밀번호: ${json.tempPassword})`);
-      setNewName(""); setNewEmail(""); setNewLevel("L1");
+      toast.success(`${newName} 학생이 등록되었습니다.`);
+      setNewName(""); setNewPin(""); setNewLevel("L1");
       setStudents((prev) => [...prev, json.student as ProjectStudent & { profile: Profile }]);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "오류가 발생했습니다.");
@@ -126,7 +130,7 @@ export default function StudentsPage() {
           <CardContent className="p-4">
             <p className="text-sm text-blue-700 font-medium mb-1">💡 학생 프리셋</p>
             <p className="text-xs text-blue-600 mb-3">
-              아래 6명의 학생 데이터가 준비되어 있습니다. 각 학생의 이메일 계정을 만들어 등록하세요.
+              아래 6명의 학생이 준비되어 있습니다. 이름과 PIN(4자리)을 입력해 등록하세요.
             </p>
             <div className="flex flex-wrap gap-2">
               {PRESET_STUDENTS.map((s) => {
@@ -208,12 +212,13 @@ export default function StudentsPage() {
               />
             </div>
             <div className="space-y-1">
-              <Label className="text-xs">이메일</Label>
+              <Label className="text-xs">PIN (4~6자리 숫자)</Label>
               <Input
-                type="email"
-                value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)}
-                placeholder="student@school.kr"
+                type="number"
+                value={newPin}
+                onChange={(e) => setNewPin(e.target.value)}
+                placeholder="1234"
+                maxLength={6}
               />
             </div>
           </div>
