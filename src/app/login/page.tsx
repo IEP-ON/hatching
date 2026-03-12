@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { ArrowLeft, Delete } from "lucide-react";
 
@@ -24,7 +24,6 @@ function LoginForm() {
   const [pin, setPin] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
 
@@ -69,6 +68,7 @@ function LoginForm() {
     setLoading(true);
     setError(null);
     try {
+      // 서버에서 email 조회 (유저 존재 확인)
       const res = await fetch("/api/auth/class-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -77,19 +77,18 @@ function LoginForm() {
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? "PIN이 올바르지 않습니다.");
 
-      // 세션 설정
-      await supabase.auth.setSession({
-        access_token: json.session.access_token,
-        refresh_token: json.session.refresh_token,
+      // createBrowserClient로 직접 signIn → @supabase/ssr이 올바른 청크 쿠키 설정
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: json.email,
+        password: pin,
       });
+      if (signInError) throw new Error("이름 또는 PIN이 올바르지 않습니다.");
 
       const redirectTo = searchParams.get("redirectTo") ?? "/dashboard";
-      router.push(redirectTo);
-      router.refresh();
+      window.location.href = redirectTo;
     } catch (err) {
       setError(err instanceof Error ? err.message : "오류가 발생했습니다.");
       setPin("");
-    } finally {
       setLoading(false);
     }
   }
