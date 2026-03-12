@@ -18,13 +18,14 @@ export default async function AppLayout({
     redirect("/login");
   }
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("*")
     .eq("id", user.id)
     .single();
 
   if (!profile) {
+    console.error("[AppLayout] 프로필 없음:", { userId: user.id, error: profileError });
     redirect("/login?error=no_profile");
   }
 

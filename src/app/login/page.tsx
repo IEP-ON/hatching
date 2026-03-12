@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Suspense } from "react";
 import { ArrowLeft, Delete } from "lucide-react";
@@ -25,6 +25,7 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
+  const router = useRouter();
   const supabase = createClient();
 
   // Step 1 → 2: 학급 코드로 멤버 목록 조회
@@ -68,6 +69,8 @@ function LoginForm() {
     setLoading(true);
     setError(null);
     try {
+      console.log("[로그인] 시작:", { profileId: selected.profileId, role: selected.role });
+      
       // 서버에서 email 조회 (유저 존재 확인)
       const res = await fetch("/api/auth/class-login", {
         method: "POST",
@@ -75,18 +78,34 @@ function LoginForm() {
         body: JSON.stringify({ profileId: selected.profileId, pin }),
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error ?? "PIN이 올바르지 않습니다.");
+      if (!res.ok) {
+        console.error("[로그인] API 실패:", json);
+        throw new Error(json.error ?? "PIN이 올바르지 않습니다.");
+      }
+
+      console.log("[로그인] email 확인:", json.email);
 
       // createBrowserClient로 직접 signIn → @supabase/ssr이 올바른 청크 쿠키 설정
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email: json.email,
         password: pin,
       });
-      if (signInError) throw new Error("이름 또는 PIN이 올바르지 않습니다.");
+      if (signInError) {
+        console.error("[로그인] Supabase 인증 실패:", signInError);
+        throw new Error("이름 또는 PIN이 올바르지 않습니다.");
+      }
 
+      console.log("[로그인] 인증 성공:", { userId: data.user?.id });
+
+      // 세션 쿠키가 서버에 반영되도록 router.refresh() 후 리디렉트
+      router.refresh();
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const redirectTo = searchParams.get("redirectTo") ?? "/dashboard";
-      window.location.href = redirectTo;
+      console.log("[로그인] 리디렉트:", redirectTo);
+      router.push(redirectTo);
     } catch (err) {
+      console.error("[로그인] 에러:", err);
       setError(err instanceof Error ? err.message : "오류가 발생했습니다.");
       setPin("");
       setLoading(false);

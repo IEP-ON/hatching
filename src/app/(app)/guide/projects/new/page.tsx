@@ -55,11 +55,16 @@ export default function NewProjectPage() {
 
       // PIN이 입력된 경우 교사 계정 이메일을 class.local 형식으로 변경
       if (teacherPin) {
-        await fetch("/api/auth/setup-teacher-pin", {
+        const pinRes = await fetch("/api/auth/setup-teacher-pin", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ pin: teacherPin }),
         });
+        if (!pinRes.ok) {
+          const pinErr = await pinRes.json();
+          console.error("[프로젝트 생성] PIN 설정 실패:", pinErr);
+          toast.error("PIN 설정에 실패했습니다: " + (pinErr.error || "알 수 없는 오류"));
+        }
       }
 
       toast.success("프로젝트가 만들어졌습니다!");

@@ -9,10 +9,23 @@ export default async function DashboardPage() {
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) {
+    console.log("[대시보드] 인증 없음 - 로그인으로 리디렉트");
+    redirect("/login");
+  }
 
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-  if (!profile || profile.role !== "teacher") redirect("/textbook");
+  const { data: profile, error: profileError } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+  if (!profile) {
+    console.error("[대시보드] 프로필 없음:", { userId: user.id, error: profileError });
+    redirect("/login?error=no_profile");
+  }
+  
+  console.log("[대시보드] 프로필 확인:", { userId: user.id, role: profile.role, name: profile.name });
+  
+  if (profile.role !== "teacher") {
+    console.log("[대시보드] 교사 아님 - 교과서로 리디렉트");
+    redirect("/textbook");
+  }
 
   const { data: projects } = await supabase
     .from("projects")
